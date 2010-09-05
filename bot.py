@@ -9,6 +9,7 @@ http://inamidst.com/phenny/
 
 import sys, os, re, threading, imp
 import irc
+import MySQLdb
 
 home = os.getcwd()
 
@@ -28,6 +29,19 @@ class Phenny(irc.Bot):
       self.doc = {}
       self.stats = {}
       self.setup()
+      self.conn = MySQLdb.connect (
+            host = config.db_host,
+            user = config.db_user,
+            passwd = config.db_pass,
+            db = config.db_name
+      )
+
+   def query(self, sql):
+      cursor = self.conn.cursor(MySQLdb.cursors.DictCursor)
+      cursor.execute (sql)
+      res = cursor.fetchall()
+      cursor.close()
+      return res
 
    def setup(self): 
       self.variables = {}
