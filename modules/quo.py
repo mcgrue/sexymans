@@ -29,8 +29,9 @@ class Quote():
 	def do(self, input):
 		args = input.split(' ')
 		
-		if len(args) == 2 and is_numeric(args[1]):
-			return self.cmd_indexed(int(args[1]))
+		if len(args) >= 2 and is_numeric(args[1]):
+			idx = int(args[1])
+			return self.cmd_indexed(idx, args[2:])
 		
 		if len(args) > 1 and self.cmds.has_key(args[1].lower()):
 			func = self.cmds[args[1].lower()]
@@ -158,8 +159,6 @@ class Quote():
 			txt = ' '.join(args)
 			txt = _mysql.escape_string(txt)
 			
-			print "escaped: (%s)" % (txt)
-			
 			sql = "SELECT quote FROM quote WHERE quote LIKE '%"+txt+"%' ORDER BY RAND() LIMIT 1" 
 		else:
 			sql = "SELECT quote FROM quote ORDER BY RAND() LIMIT 1"
@@ -168,9 +167,15 @@ class Quote():
 			
 		return self._quote_format(res['quote'])
 		
-	def cmd_indexed(self, idx):
+	def cmd_indexed(self, idx, args):
 		try:
-			sql = "SELECT quote FROM quote LIMIT %d,1" % (idx)
+			txt = ''
+			if len(args) > 0:
+				txt = ' '.join(args)
+				txt = _mysql.escape_string(txt)
+				txt = " WHERE quote LIKE '%"+txt+"%' "
+				
+			sql = "SELECT quote FROM quote %s LIMIT %d,1" % (txt, idx)
 				
 			res, = self.phenny.query(sql)
 		except ValueError:
