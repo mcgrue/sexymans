@@ -38,7 +38,10 @@ class Quote():
 		return ['help!']
 	
 	def cmd_default(self, input):
-		return ['default!']
+		sql = "SELECT quote FROM quote ORDER BY RAND() LIMIT 1"
+		res, = self.phenny.query(sql)
+		
+		return [res['quote']]
 
 
 def quo(phenny, input):

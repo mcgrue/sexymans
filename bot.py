@@ -41,6 +41,7 @@ class Phenny(irc.Bot):
       cursor.execute (sql)
       res = cursor.fetchall()
       cursor.close()
+      
       return res
 
    def setup(self): 
