@@ -14,8 +14,15 @@ def is_numeric(str):
 		int(str)
 	except ValueError:
 		return 0
-	
 	return 1
+
+def try_query(phenny, sql):
+	try:
+		res, = phenny.query(sql)	
+	except ValueError:
+		res = {'quote': 'That query was dumb.'}
+		
+	return res
 
 class Quote():
 	def __init__(self, phenny):
@@ -75,7 +82,7 @@ class Quote():
 			
 		try:
 			args  = args[1:]
-					
+								
 			sql = self._search_query(args, dictargs)
 		
 			res, = self.phenny.query(sql)
@@ -97,12 +104,12 @@ class Quote():
 			where = "WHERE quote LIKE '%"+esc+"%'"
 		
 		sql = "SELECT count(*) as my_cnt FROM quote " + where
-		result_set, = self.phenny.query(sql)
+		result_set = try_query(self.phenny, sql)
 		return [ ('There are %d quotes in my sexy databanks.' % (result_set['my_cnt'])) ]
 		
 	def cmd_list(self, input):
 		sql = "SELECT count(*) as total, prf_name FROM quote GROUP BY prf_name ORDER BY total DESC"
-		result_set = self.phenny.query(sql)
+		result_set = try_query(self.phenny, sql)
 		
 		txt = ''
 		
@@ -123,8 +130,7 @@ class Quote():
 		kwargs.setdefault('from', False)
 		kwargs.setdefault('index', False)
 			
-		if len(args) > 1:
-			args = args[1:]
+		if len(args) > 0:
 			txt = ' '.join(args)
 			txt = _mysql.escape_string(txt)
 			
@@ -149,8 +155,6 @@ class Quote():
 		
 		sql = select + where + limit
 		
-		#print sql
-		
 		return sql
 		
 	def cmd_default(self, args):
@@ -163,7 +167,7 @@ class Quote():
 		else:
 			sql = "SELECT quote FROM quote ORDER BY RAND() LIMIT 1"
 			
-		res, = self.phenny.query(sql)
+		res = try_query(self.phenny, sql)
 			
 		return self._quote_format(res['quote'])
 		
