@@ -29,19 +29,30 @@ class Phenny(irc.Bot):
       self.doc = {}
       self.stats = {}
       self.setup()
+
+   def _sql_connect(self):
       self.conn = MySQLdb.connect (
-            host = config.db_host,
-            user = config.db_user,
-            passwd = config.db_pass,
-            db = config.db_name
+            host = self.config.db_host,
+            user = self.config.db_user,
+            passwd = self.config.db_pass,
+            db = self.config.db_name
       )
 
+   def _sql_disconnect(self):
+      self.conn.close()
+
+
    def query(self, sql):
+
+      self._sql_connect()
+
       cursor = self.conn.cursor(MySQLdb.cursors.DictCursor)
       cursor.execute (sql)
       res = cursor.fetchall()
       cursor.close()
-      
+
+      self._sql_disconnect()
+
       return res
 
    def setup(self): 

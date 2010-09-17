@@ -116,7 +116,7 @@ class Quote():
 		for row in result_set:
 			if txt:
 				txt = txt + ', '
-				
+			 print >> sys.stderr, txt				
 			txt = txt + row['prf_name'] + ('(%s)' % row['total'])
 			
 		return ['prf counts: ' + txt]
