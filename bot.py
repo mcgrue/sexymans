@@ -234,13 +234,13 @@ class Phenny(irc.Bot):
             
             args = (e_sender, e_nick, e_user, e_msg)
             
-            print args
+            #print args
           
             cursor = self.conn.cursor(MySQLdb.cursors.DictCursor)
             sql = "INSERT INTO `irc_logs`(`time`, `room`, `user`, `usermask`, `msg`) VALUES (NOW(), '%s', '%s', '%s', '%s') " % args
             cursor.execute(sql)
             self._sql_disconnect()
-        except TypeError as (err):
+        except TypeError, err:
             print "Type error({0})".format(err)
         except:
             print "Unexpected error:", sys.exc_info()[0]
