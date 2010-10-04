@@ -125,6 +125,8 @@ class Quote():
         sql = "SELECT count(*) as total, prf_name FROM quotes GROUP BY prf_name ORDER BY total DESC"
         
         result_set = self.phenny.query(sql)
+
+	txt = ''
         
         for row in result_set:
             if txt:
