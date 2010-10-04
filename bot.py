@@ -220,11 +220,40 @@ class Phenny(irc.Bot):
             if limits and (func.__module__ not in limits): 
                return True
       return False
+    
+   def log(self, origin, msg):
+      
+      if origin.sender and origin.nick and origin.user and msg:
+        try:
+            self._sql_connect()
+          
+            e_sender = self.conn.escape_string(origin.sender)
+            e_nick = self.conn.escape_string(origin.nick)
+            e_user = self.conn.escape_string(origin.user)
+            e_msg = self.conn.escape_string(msg)
+            
+            args = (e_sender, e_nick, e_user, e_msg)
+            
+            print args
+          
+            cursor = self.conn.cursor(MySQLdb.cursors.DictCursor)
+            sql = "INSERT INTO `irc_logs`(`time`, `room`, `user`, `usermask`, `msg`) VALUES (NOW(), '%s', '%s', '%s', '%s') " % args
+            cursor.execute(sql)
+            self._sql_disconnect()
+        except TypeError as (err):
+            print "Type error({0})".format(err)
+        except:
+            print "Unexpected error:", sys.exc_info()[0]
 
-   def dispatch(self, origin, args): 
+
+   def dispatch(self, origin, args):
+    
       bytes, event, args = args[0], args[1], args[2:]
       text = decode(bytes)
-
+      
+      if event == 'PRIVMSG':
+        self.log(origin, text)
+      
       for priority in ('high', 'medium', 'low'): 
          items = self.commands[priority].items()
          for regexp, funcs in items: 
