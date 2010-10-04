@@ -47,8 +47,9 @@ class Phenny(irc.Bot):
       self._sql_connect()
 
       cursor = self.conn.cursor(MySQLdb.cursors.DictCursor)
-      cursor.execute (sql)
+      cursor.execute(sql)
       res = cursor.fetchall()
+      
       cursor.close()
 
       self._sql_disconnect()
@@ -57,7 +58,7 @@ class Phenny(irc.Bot):
 
    def setup(self): 
       self.variables = {}
-
+    
       filenames = []
       if not hasattr(self.config, 'enable'): 
          for fn in os.listdir(os.path.join(home, 'modules')): 
