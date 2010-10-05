@@ -31,6 +31,11 @@ class Quote():
         return self.cmd_default(args[1:])
     
     def _quote_format(self, quote):
+        print quote
+                
+        quote = ' '.join(quote.splitlines())
+        
+        print quote
         
         ret = []
         
