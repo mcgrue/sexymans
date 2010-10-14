@@ -108,6 +108,8 @@ class Quote():
             
             print "............"
             print res
+            print res['id']
+            print res.get('id')
             
         except ValueError:
             res = {
