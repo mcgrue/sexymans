@@ -127,11 +127,11 @@ class Quote():
         return [ ('There are %d quotes in my sexy databanks.' % (result_set['my_cnt'])) ]
     
     def cmd_list(self, input):
-        sql = "SELECT count(*) as total, prf_name FROM quotes GROUP BY prf_name ORDER BY total DESC"
+        sql = "SELECT count(*) as total, p.name as prf_name FROM quotes q, prfs p WHERE p.id = q.prf_id GROUP BY p.id ORDER BY total DESC"
         
         result_set = self.phenny.query(sql)
-
-	txt = ''
+        
+        txt = ''
         
         for row in result_set:
             if txt:
@@ -162,7 +162,7 @@ class Quote():
             
         if kwargs['from']:
             _from = _mysql.escape_string(kwargs['from'])
-            where = where + " AND prf_name = '"+_from+"' "
+            where = where + " AND prf_id = (SELECT id FROM prfs WHERE name = '"+_from+"' ) "
             
         if kwargs['count']:
             select = "SELECT COUNT(*) as my_cnt FROM quotes "
