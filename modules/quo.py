@@ -105,6 +105,10 @@ class Quote():
             sql = self._search_query(args, dictargs)
         
             res, = self.phenny.query(sql)
+            
+            print "............"
+            print res
+            
         except ValueError:
             res = {
                 'my_cnt': 0,
@@ -178,7 +182,6 @@ class Quote():
         sql = select + where + limit
         
         return sql
-
 
 def is_numeric(str):
     try:
