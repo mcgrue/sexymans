@@ -33,7 +33,7 @@ class Quote():
     def _quote_format(self, quote, idx=0):
         
         if idx > 0:
-            quote = quote +  ('  (— pingpawn.com/q/%d )' % (idx) ) 
+            quote = quote +  ('  (— http://pingpawn.com/q/%d )' % (idx) ) 
                 
         quote = ' '.join(quote.splitlines())
                 
