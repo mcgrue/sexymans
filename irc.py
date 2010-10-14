@@ -176,8 +176,8 @@ class Bot(asynchat.async_chat):
     
             self.msg(origin.sender, report[0] + ' (' + report[1] + ')')
     
-        except Exception as inst:
-            self.msg(origin.sender, "Got an error (%s)." % (type(inst)) )
+        except Exception, e: 
+            self.msg(origin.sender, "Got an error (%s)." % (type(e)) )
 
 class TestBot(Bot): 
    def f_ping(self, origin, match, args): 
