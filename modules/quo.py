@@ -77,7 +77,7 @@ class Quote():
             res = {
                 'quote': 'Invalid index, mofo.'
             }
-        return self._quote_format(('Quote #%d: ' % (idx) ) + res['quote'])
+        return self._quote_format(('pingpawn.com/q/%d : ' % (idx) ) + res['quote'])
     
     def cmd_from(self, args):
         
