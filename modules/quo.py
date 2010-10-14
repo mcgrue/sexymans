@@ -30,13 +30,13 @@ class Quote():
                 
         return self.cmd_default(args[1:])
     
-    def _quote_format(self, quote):
-        print quote
+    def _quote_format(self, quote, idx=0):
+        
+        if idx > 0:
+            quote = quote +  ('  (— pingpawn.com/q/%d )' % (idx) ) 
                 
         quote = ' '.join(quote.splitlines())
-        
-        print quote
-        
+                
         ret = []
         
         while len(quote) > 450:
@@ -53,13 +53,13 @@ class Quote():
             txt = ' '.join(args)
             txt = _mysql.escape_string(txt)
             
-            sql = "SELECT quote FROM quotes WHERE quote LIKE '%"+txt+"%' ORDER BY RAND() LIMIT 1" 
+            sql = "SELECT quote, id FROM quotes WHERE quote LIKE '%"+txt+"%' ORDER BY RAND() LIMIT 1" 
         else:
-            sql = "SELECT quote FROM quotes ORDER BY RAND() LIMIT 1"
+            sql = "SELECT quote, id FROM quotes ORDER BY RAND() LIMIT 1"
             
         res = try_query(self.phenny, sql)
             
-        return self._quote_format(res['quote'])
+        return self._quote_format(res['quote'], res['id'])
     
     def cmd_indexed(self, idx, args):
         try:
@@ -77,7 +77,7 @@ class Quote():
             res = {
                 'quote': 'Invalid index, mofo.'
             }
-        return self._quote_format(('pingpawn.com/q/%d : ' % (idx) ) + res['quote'])
+        return self._quote_format(res['quote'], idx)
     
     def cmd_from(self, args):
         
@@ -114,7 +114,7 @@ class Quote():
         if count:
             return self._quote_format("Count: %d" % (res['my_cnt']))
         else:
-            return self._quote_format(res['quote'])
+            return self._quote_format(res['quote'], res['id'])
     
     def cmd_count(self, args):
         where = ''
@@ -167,7 +167,7 @@ class Quote():
         if kwargs['count']:
             select = "SELECT COUNT(*) as my_cnt FROM quotes "
         else:
-            select = "SELECT quote FROM quotes "
+            select = "SELECT quote, id FROM quotes "
             
         if kwargs['index']:
             n = kwargs['index']
