@@ -107,9 +107,8 @@ class Quote():
             res, = self.phenny.query(sql)
             
             print "............"
-            print res
-            print res['id']
-            print res.get('id')
+            print dir(res)
+            print "............"
             
         except ValueError:
             res = {
