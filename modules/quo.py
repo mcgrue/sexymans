@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding=utf-8
 
-import json
+import simplejson as json
 import sys
 import re
 import web
@@ -72,7 +72,15 @@ class Quote():
         return ['Indexed.']
     
     def cmd_from(self, args):
-        return ['From.']
+        _from = args[0]
+        args = args[1:]
+
+        if len(args) > 0:
+            txt = '+'.join(args)
+            url = 'http://pingpawn.com/api/search/%s?q=%s' % (_from, txt)
+            return self._do_quote(url)
+        else:
+            return self._do_quote('http://pingpawn.com/api/rand/%s' % _from)
     
     def cmd_count(self, args):
         return ['-1']
@@ -88,8 +96,7 @@ def is_numeric(s):
     else:
         return True# numeric
 
-def quo(phenny, input): 
-    
+def quo(phenny, input):    
     try:
         q = Quote(phenny)
         res = q.do(input)
