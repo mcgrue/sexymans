@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import os, sys, urllib
+import os, sys, urllib, random
 cmd_folder = os.path.dirname(os.path.abspath(__file__))
 cmd_folder = os.path.join(cmd_folder, "jm_names")
 if cmd_folder not in sys.path:
@@ -16,9 +16,11 @@ def name(phenny, input):
    term = origterm.encode('utf-8')
 
    term = term.lower()
-   if term not in ['male', 'female']:
-      return phenny.say('gender must be male or female. other genders not supported, pervert')
+   if term not in ['male', 'female', 'random']:
+      return phenny.say('gender must be male, female, or random. other genders not supported, pervert')
    
+   if term == 'random':
+      term = random.choice(['male, female'])
    if term == 'male':
       return phenny.say(names.get(True))
    return phenny.say(names.get(False))
