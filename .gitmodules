@@ -1,0 +1,3 @@
+[submodule "modules/jm_names"]
+	path = modules/jm_names
+	url = git@github.com:jmathes/names.git
