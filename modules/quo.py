@@ -63,10 +63,10 @@ class Quote():
         
         if len(args) > 0:
             txt = '+'.join(args)
-            url = 'http://pingpawn.com/api/search?q=%s' % txt
+            url = 'http://pingpawn.com/api/search?size_limit=800&q=%s' % txt
             return self._do_quote(url)
         else:
-            return self._do_quote('http://pingpawn.com/api/rand')
+            return self._do_quote('http://pingpawn.com/api/rand?size_limit=800')
     
     def cmd_indexed(self, idx, args):
         return ['Indexed.']
