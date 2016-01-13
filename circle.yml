@@ -1,0 +1,8 @@
+# Put your circle shits here
+
+machine:
+  python:
+    version: 2.7.6
+test:
+  override:
+    - python sexymans
