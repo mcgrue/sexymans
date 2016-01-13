@@ -18,4 +18,4 @@ deployment:
     branch: master
     owner: mcgrue
     commands:
-     - ssh deploybutt@pingpawn.com
+     - ssh deploybutt@pingpawn.com "echo WIP"
