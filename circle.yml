@@ -13,8 +13,9 @@ test:
 
 # We CAN have nice things
 ## Customize deployment commands
-#deployment:
-#  staging:
-#    branch: master
-#    heroku:
-#      appname: foo-bar-123
+deployment:
+  production:
+    branch: master
+    owner: mcgrue
+    commands:
+     - ssh deploybutt@pingpawn.com
