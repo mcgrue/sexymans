@@ -13,3 +13,10 @@ ci: ;
 log: ;
 	# git log --date=short --format='%h %ad %s'
 	git graph
+
+# Anything below here is added by eeeady for the purposes of configuring mcgrue/sexymans
+update: ;
+	git pull origin/master 
+
+install-upstart: ;
+	install -o root -g root -m 0644 config/sexymans.conf /etc/init/sexymans.conf
