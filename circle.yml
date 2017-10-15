@@ -1,0 +1,21 @@
+# Put your circle shits here
+# Ref: https://circleci.com/docs/config-sample
+
+machine:
+  python:
+    version: 2.7.6
+
+# Add your real tests here
+test:
+  override:
+    - python sexymans
+#  post:
+
+# We CAN have nice things
+## Customize deployment commands
+deployment:
+  production:
+    branch: master
+    owner: mcgrue
+    commands:
+     - ssh deploybutt@pingpawn.com "echo WIP"
