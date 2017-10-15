@@ -6,6 +6,7 @@ import sys
 import re
 import web
 import MySQLdb, _mysql
+import os
 
 class Quote():
     def __init__(self, phenny):
@@ -34,29 +35,39 @@ class Quote():
     def _do_quote(self, url):
         
         d = json.loads(web.get(url))
+
+	ret = []
+	
+        try:        
+	    if d.has_key('Error'):
+	        return ['Something done fucked up.']
+	    elif d.has_key('quotes'):
+	        q = d['quotes'];
+	    elif d.has_key('q'):
+	        q = d['q'];
+	    elif d.has_key('quote'):
+	        q = d['quote'];
+	    else:
+	        return ['Is website down?']
+	
+	    ### make it so it never splits the link
+            quote = q
+	    quote = quote + (u'  (- http://pingpawn.com/q/%s )' % (str(d['id'])) ) 
+			
+	    quote = u' '.join(quote.splitlines())
+	    print('after split: %s' % (quote))		
+		
+	    while len(quote) > 450:
+                ret.append( quote[:450] )
+                quote = quote[450:]
         
-        if d.has_key('Error'):
-            return ['Something done fucked up.']
-        elif d.has_key('quotes'):
-            q = d['quotes'];
-        elif d.has_key('q'):
-            q = d['q'];
-        else:
-            return ['Is website down?']
-        
-        ### make it so it never splits the link.
-        quote = q['quote'] +  (u'  (- http://pingpawn.com/q/%s )' % (q['id']) ) 
-                
-        quote = u' '.join(quote.splitlines())
-                
-        ret = []
-        
-        while len(quote) > 450:
-            ret.append( quote[:450] )
-            quote = quote[450:]
-        
-        ret.append( quote )
-        
+            ret.append( quote )
+	except Exception as e:
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+            print(exc_type, fname, exc_tb.tb_lineno)
+            print(e.message)
+       
         return ret
     
     def cmd_default(self, args):
