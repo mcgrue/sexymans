@@ -33,14 +33,14 @@ class Quote():
         return self.cmd_default(args[1:])
     
     def _do_quote(self, url):
-        
+        print(url)        
         d = json.loads(web.get(url))
 
 	ret = []
 	
         try:        
 	    if d.has_key('Error'):
-	        return ['Something done fucked up.']
+	        return ['Bzzt: %s' % d['Error'] ]
 	    elif d.has_key('quotes'):
 	        q = d['quotes'];
 	    elif d.has_key('q'):
@@ -71,17 +71,31 @@ class Quote():
         return ret
     
     def cmd_default(self, args):
-        
-        if len(args) > 0:
+        print args        
+        if len(args) > 0 or (len(args) == 1 and args[0] == ''):
             txt = '+'.join(args)
             url = 'http://api.pingpawn.com/search?size_limit=800&q=%s' % txt
             return self._do_quote(url)
         else:
             return self._do_quote('http://api.pingpawn.com/rand?size_limit=800')
+
     
     def cmd_indexed(self, idx, args):
-        return ['Indexed.']
+
+	if len(args) >= 2 and (args[0] == 'from' or args[0] == 'FROM'):
+		_from = args[1]
+		txt = '+'.join(args[2:])
+	else:
+		txt =  '+'.join(args)
+		_from = '~~~NOBODY~~~'
+
+	url = 'http://api.pingpawn.com/search/%s/%s/?q=%s' % (_from, idx, txt)
+	return self._do_quote(url)
+	
+        #return ['indexed: ' + txt]
+	#return ['Indexed #%s %s "%s" - %s' % (idx, _from, txt, url)]
     
+
     def cmd_from(self, args):
         _from = args[0]
         args = args[1:]
@@ -92,12 +106,24 @@ class Quote():
             return self._do_quote(url)
         else:
             return self._do_quote('http://api.pingpawn.com/rand/%s' % _from)
-    
+   
+ 
     def cmd_count(self, args):
-        return ['-1']
+	if len(args) >= 2 and (args[0] == 'from' or args[0] == 'FROM'):
+		_from = args[1]
+		txt = '+'.join(args[2:])
+	else:
+		txt =  '+'.join(args)
+		_from = ''
+
+	url = 'http://api.pingpawn.com/count/%s?q=%s' % (_from, txt)
+
+	d = json.loads(web.get(url))
+
+        return ['count: %s' % d['my_count']]
     
     def cmd_help(self, input):
-        return ['quo, quo from <quotefile>, quo # from <quotefile>, quo count <phrase>, quo <phrase>, quo # <phrase>']
+        return ['quo, quo from <quotefile>, quo # from <quotefile>, quo count <phrase>, quo count from <quotefile> <phrase>, quo <phrase>, quo # <phrase>']
     
 def is_numeric(s):
     try:
